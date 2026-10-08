@@ -2,8 +2,21 @@ from django.db import models
 
 # Create your models here.
 class Workout(models.Model):
+    class Title(models.TextChoices):
+        STRENGTH = "strength", "Силовая"
+        CARDIO = "cardio", "Кардио"
+        STRETCHING = "stretching", "Растяжка"
+        SWIMMING = "swimming", "Плавание"
+        RUNNING = "running", "Бег"
+        CYCLING = "cycling", "Велосипед"
+        OTHER = "other", "Другое"
+
     date = models.DateField()
-    title = models.CharField(max_length=100)
+    title = models.CharField(
+        max_length=20,
+        choices=Title.choices,
+        default=Title.STRENGTH,
+    )
     duration_minutes = models.PositiveIntegerField()
     notes = models.TextField(blank=True)
 
@@ -11,7 +24,7 @@ class Workout(models.Model):
         ordering = ['-date'] #от свежих к старым
 
     def __str__(self):
-        return f'{self.date}: {self.title}'
+        return f"{self.date}: {self.get_title_display()}"
 
 
 class NutritionEntry(models.Model):
