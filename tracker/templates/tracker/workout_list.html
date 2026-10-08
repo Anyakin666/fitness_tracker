@@ -1,12 +1,17 @@
-<h1>Тренировки</h1>
+{% extends 'base.html' %}
 
-<ul>
-  {% for workout in workouts %}
-    <li>
-      <strong>{{ workout.date|date:"d.m.Y" }}</strong> — {{ workout.get_title_display }} — {{ workout.duration_minutes }} минут
-      {% if workout.notes %}<br><small>{{ workout.notes }}</small>{% endif %}
-    </li>
-  {% empty %}
-    <li>Пока нет тренировок.</li>
-  {% endfor %}
-</ul>
+{% block title %}Тренировки{% endblock %}
+
+{% block content %}
+  <h1>Тренировки</h1>
+
+  <ul>
+    {% for workout in workouts %}
+      <li>
+        {{ workout.date|date:"d.m.Y" }} — {{ workout.get_title_display }} — {{ workout.duration_minutes }} мин
+      </li>
+    {% empty %}
+      <li>Пока нет тренировок.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
