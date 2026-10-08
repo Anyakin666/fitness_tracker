@@ -36,6 +36,8 @@ class NutritionEntry(models.Model):
 
     class Meta:
         ordering = ['-date'] #от свежих к старым
+        verbose_name = "Nutrition entry"
+        verbose_name_plural = "Nutrition entries" # чтобы не entrys
 
     def __str__(self):
         return f'{self.date}: {self.calories} kcal'
