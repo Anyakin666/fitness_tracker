@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Замеры{% endblock %}
+
+{% block content %}
+  <h1>Замеры</h1>
+
+  <ul>
+    {% for m in measurements %}
+      <li>
+        {{ m.date|date:"d.m.Y" }} - {{ m.weight }} кг
+        {% if m.waist or m.hips or m.chest or m.thigh or m.biceps or m.calf %}
+          <details>
+            <summary>Подробнее</summary>
+            <ul>
+              {% if m.waist %}<li>Талия: {{ m.waist }} см</li>{% endif %}
+              {% if m.hips %}<li>Бёдра: {{ m.hips }} см</li>{% endif %}
+              {% if m.chest %}<li>Грудь: {{ m.chest }} см</li>{% endif %}
+              {% if m.thigh %}<li>Бедро: {{ m.thigh }} см</li>{% endif %}
+              {% if m.biceps %}<li>Бицепс: {{ m.biceps }} см</li>{% endif %}
+              {% if m.calf %}<li>Икра: {{ m.calf }} см</li>{% endif %}
+            </ul>
+          </details>
+        {% endif %}
+      </li>
+    {% empty %}
+      <li>Пока нет записей</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
