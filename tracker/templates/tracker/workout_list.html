@@ -8,7 +8,10 @@
   <ul>
     {% for workout in workouts %}
       <li>
-        {{ workout.date|date:"d.m.Y" }} — {{ workout.get_title_display }} — {{ workout.duration_minutes }} мин
+        {{ workout.date|date:"d.m.Y" }} - {{ workout.get_title_display }} - {{ workout.duration_minutes }} мин
+        {% if workout.notes %}
+          <br><small>{{ workout.notes|truncatewords:10 }}</small>
+        {% endif %}
       </li>
     {% empty %}
       <li>Пока нет тренировок.</li>

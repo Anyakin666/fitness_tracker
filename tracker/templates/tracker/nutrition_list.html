@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Дневник питания{% endblock %}
+
+{% block content %}
+  <h1>Дневник питания</h1>
+
+  <ul>
+    {% for entry  in entries %}
+      <li>
+        {{ entry.date|date:"d.m.Y" }} - {{ entry.calories }} ккал
+        {% if entry.protein and entry.fat and entry.carbs %}
+          <br><small>б {{ entry.protein }}, ж {{entry.fat}}, у {{entry.carbs}}</small>
+        {% endif %}
+      </li>
+    {% empty %}
+      <li>Пока нет записей</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

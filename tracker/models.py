@@ -30,9 +30,9 @@ class Workout(models.Model):
 class NutritionEntry(models.Model):
     date = models.DateField(unique=True)
     calories = models.PositiveIntegerField()
-    protein = models.PositiveIntegerField()
-    fat = models.PositiveIntegerField()
-    carbs = models.PositiveIntegerField()
+    protein = models.PositiveIntegerField(null=True, blank=True)
+    fat = models.PositiveIntegerField(null=True, blank=True)
+    carbs = models.PositiveIntegerField(null=True, blank=True)
 
     class Meta:
         ordering = ['-date'] #от свежих к старым
