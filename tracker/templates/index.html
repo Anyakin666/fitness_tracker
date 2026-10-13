@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+  <h1>Мой дневник</h1>
+
+  <h2>Последняя тренировка</h2>
+  {% if last_workout %}
+    <p>
+      {{ last_workout.date|date:"d.m.Y" }} — 
+      {{ last_workout.get_title_display }} — 
+      {{ last_workout.duration_minutes }} мин
+    </p>
+  {% else %}
+    <p>Пока нет тренировок.</p>
+  {% endif %}
+  <h2>Последний замер</h2>
+  {% if last_measurement %}
+    <p>
+      {{ last_measurement.date|date:"d.m.Y" }} — 
+      {{ last_measurement.weight }} кг
+    </p>
+  {% else %}
+    <p>Пока нет замеров.</p>
+  {% endif %}
+  <h2>Средние калории за 7 дней</h2>
+  {% if avg_calories %}
+    <p>{{ avg_calories|floatformat:0 }} ккал</p>
+  {% else %}
+    <p>Нет данных за последнюю неделю.</p>
+  {% endif %}
+{% endblock %}
