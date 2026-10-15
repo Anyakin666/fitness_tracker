@@ -1,12 +1,22 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView
 from .models import Workout, NutritionEntry, Measurement
 from datetime import timedelta
 
 from django.db.models import Avg
 from django.utils import timezone
+
+from django.urls import reverse_lazy
+from .forms import WorkoutForm
+
+
+class WorkoutCreateView(CreateView):
+    model = Workout
+    form_class = WorkoutForm
+    template_name = 'tracker/workout_form.html'
+    success_url = reverse_lazy('workout_list')
 
 
 class WorkoutListView(ListView):

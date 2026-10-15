@@ -4,7 +4,7 @@
 
 {% block content %}
   <h1>Тренировки</h1>
-
+  <a href="{% url 'workout_add' %}">+ Добавить тренировку</a>
   <ul>
     {% for workout in workouts %}
       <li>
