@@ -4,7 +4,7 @@
 
 {% block content %}
   <h1>Замеры</h1>
-
+  <p><a href="{% url 'measurement_add' %}">+ Добавить запись</a></p>
   <ul>
     {% for m in measurements %}
       <li>

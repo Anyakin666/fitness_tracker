@@ -4,7 +4,7 @@
 
 {% block content %}
   <h1>Дневник питания</h1>
-
+  <p><a href="{% url 'nutrition_add' %}">+ Добавить запись</a></p>
   <ul>
     {% for entry  in entries %}
       <li>

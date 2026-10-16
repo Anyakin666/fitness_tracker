@@ -9,7 +9,7 @@ from django.db.models import Avg
 from django.utils import timezone
 
 from django.urls import reverse_lazy
-from .forms import WorkoutForm
+from .forms import WorkoutForm, NutritionForm, MeasurementForm
 
 
 class WorkoutCreateView(CreateView):
@@ -17,6 +17,20 @@ class WorkoutCreateView(CreateView):
     form_class = WorkoutForm
     template_name = 'tracker/workout_form.html'
     success_url = reverse_lazy('workout_list')
+
+
+class NutritionCreateView(CreateView):
+    model = NutritionEntry
+    form_class = NutritionForm
+    template_name = 'tracker/nutrition_form.html'
+    success_url = reverse_lazy('nutrition_list')
+
+
+class MeasurementCreateView(CreateView):
+    model = Measurement
+    form_class = MeasurementForm
+    template_name = 'tracker/measurement_form.html'
+    success_url = reverse_lazy('measurement_list')
 
 
 class WorkoutListView(ListView):

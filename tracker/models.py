@@ -11,14 +11,15 @@ class Workout(models.Model):
         CYCLING = "cycling", "Велосипед"
         OTHER = "other", "Другое"
 
-    date = models.DateField()
+    date = models.DateField(verbose_name='Дата')
     title = models.CharField(
         max_length=20,
         choices=Title.choices,
         default=Title.STRENGTH,
+        verbose_name='Вид тренировки'
     )
-    duration_minutes = models.PositiveIntegerField()
-    notes = models.TextField(blank=True)
+    duration_minutes = models.PositiveIntegerField(verbose_name='Длительность(мин)')
+    notes = models.TextField(blank=True, verbose_name='Заметки')
 
     class Meta:
         ordering = ['-date'] #от свежих к старым
@@ -28,11 +29,11 @@ class Workout(models.Model):
 
 
 class NutritionEntry(models.Model):
-    date = models.DateField(unique=True)
-    calories = models.PositiveIntegerField()
-    protein = models.PositiveIntegerField(null=True, blank=True)
-    fat = models.PositiveIntegerField(null=True, blank=True)
-    carbs = models.PositiveIntegerField(null=True, blank=True)
+    date = models.DateField(unique=True, verbose_name='Дата')
+    calories = models.PositiveIntegerField(verbose_name='Ккал')
+    protein = models.PositiveIntegerField(null=True, blank=True, verbose_name='Б')
+    fat = models.PositiveIntegerField(null=True, blank=True, verbose_name='Ж')
+    carbs = models.PositiveIntegerField(null=True, blank=True, verbose_name='У')
 
     class Meta:
         ordering = ['-date'] #от свежих к старым
@@ -44,14 +45,14 @@ class NutritionEntry(models.Model):
 
 
 class Measurement(models.Model):
-    date = models.DateField(unique=True)
-    weight = models.DecimalField(max_digits=5, decimal_places=2)
-    waist = models.DecimalField(max_digits=4, decimal_places=1, blank=True, null=True)
-    hips =  models.DecimalField(max_digits=4, decimal_places=1, blank=True, null=True)
-    chest =  models.DecimalField(max_digits=4, decimal_places=1, blank=True, null=True)
-    thigh =  models.DecimalField(max_digits=4, decimal_places=1, blank=True, null=True)
-    biceps =  models.DecimalField(max_digits=4, decimal_places=1, blank=True, null=True)
-    calf =  models.DecimalField(max_digits=4, decimal_places=1, blank=True, null=True)
+    date = models.DateField(unique=True, verbose_name="Дата")
+    weight = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='Вес')
+    waist = models.DecimalField(max_digits=4, decimal_places=1, blank=True, null=True, verbose_name='Талия')
+    hips =  models.DecimalField(max_digits=4, decimal_places=1, blank=True, null=True, verbose_name="Бедра")
+    chest =  models.DecimalField(max_digits=4, decimal_places=1, blank=True, null=True, verbose_name="Грудь")
+    thigh =  models.DecimalField(max_digits=4, decimal_places=1, blank=True, null=True, verbose_name="Бедро")
+    biceps =  models.DecimalField(max_digits=4, decimal_places=1, blank=True, null=True, verbose_name="Бицепс")
+    calf =  models.DecimalField(max_digits=4, decimal_places=1, blank=True, null=True, verbose_name="Голень")
 
     class Meta:
         ordering = ['-date']
