@@ -13,6 +13,8 @@
           <br><small>{{ workout.notes|truncatewords:10 }}</small>
         {% endif %}
       </li>
+      <a href="{% url 'workout_edit' workout.pk %}">Редактировать</a>
+      <a href="{% url 'workout_delete' workout.pk %}">Удалить</a>
     {% empty %}
       <li>Пока нет тренировок.</li>
     {% endfor %}

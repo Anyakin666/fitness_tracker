@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Workout, NutritionEntry, Measurement
 from datetime import timedelta
 
@@ -31,6 +31,46 @@ class MeasurementCreateView(CreateView):
     form_class = MeasurementForm
     template_name = 'tracker/measurement_form.html'
     success_url = reverse_lazy('measurement_list')
+
+
+class WorkoutUpdateView(UpdateView):
+    model = Workout
+    form_class = WorkoutForm
+    template_name = 'tracker/workout_form.html'
+    success_url = reverse_lazy('workout_list')    
+
+
+class WorkoutDeleteView(DeleteView):
+    model = Workout
+    template_name = 'tracker/workout_confirm_delete.html'
+    success_url = reverse_lazy('workout_list')    
+
+
+class MeasurementUpdateView(UpdateView):
+    model = Measurement
+    form_class = MeasurementForm
+    template_name = 'tracker/measurement_form.html'
+    success_url = reverse_lazy('measurement_list')    
+
+
+class MeasurementDeleteView(DeleteView):
+    model = Measurement
+    template_name = 'tracker/measurement_confirm_delete.html'
+    success_url = reverse_lazy('measurement_list')    
+
+
+class NutritionUpdateView(UpdateView):
+    model = NutritionEntry
+    form_class = NutritionForm
+    template_name = 'tracker/nutrition_form.html'
+    success_url = reverse_lazy('nutrition_list')
+
+class NutritionDeleteView(DeleteView):
+    model = NutritionEntry
+    template_name = 'tracker/nutrition_confirm_delete.html'
+    success_url = reverse_lazy('nutrition_list')
+
+
 
 
 class WorkoutListView(ListView):

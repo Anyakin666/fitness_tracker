@@ -13,6 +13,8 @@
           <br><small>б {{ entry.protein }}, ж {{entry.fat}}, у {{entry.carbs}}</small>
         {% endif %}
       </li>
+      <a href="{% url 'nutrition_edit' entry.pk %}">Редактировать</a>
+      <a href="{% url 'nutrition_delete' entry.pk %}">Удалить</a>
     {% empty %}
       <li>Пока нет записей</li>
     {% endfor %}

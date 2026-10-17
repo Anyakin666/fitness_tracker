@@ -22,7 +22,10 @@
             </ul>
           </details>
         {% endif %}
+      
       </li>
+      <a href="{% url 'measurement_edit' m.pk %}">Редактировать</a>
+      <a href="{% url 'measurement_delete' m.pk %}">Удалить</a>
     {% empty %}
       <li>Пока нет записей</li>
     {% endfor %}
