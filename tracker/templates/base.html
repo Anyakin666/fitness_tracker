@@ -12,6 +12,15 @@
         <a href="{% url 'workout_list' %}">Тренировки</a>
         <a href="{% url 'nutrition_list' %}">Питание</a>
         <a href="{% url 'measurement_list' %}">Замеры</a>
+        {% if user.is_authenticated %}
+          <span>{{ user.username }}</span>
+          <form method="post" action="{% url 'logout' %}" style="display:inline">
+          {% csrf_token %}
+          <button type="submit">Выйти</button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}">Войти</a>
+        {% endif %}
       </nav>
     </header>
 

@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+
 
 # Create your models here.
 class Workout(models.Model):
@@ -20,6 +22,7 @@ class Workout(models.Model):
     )
     duration_minutes = models.PositiveIntegerField(verbose_name='Длительность(мин)')
     notes = models.TextField(blank=True, verbose_name='Заметки')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['-date'] #от свежих к старым
@@ -34,6 +37,7 @@ class NutritionEntry(models.Model):
     protein = models.PositiveIntegerField(null=True, blank=True, verbose_name='Б')
     fat = models.PositiveIntegerField(null=True, blank=True, verbose_name='Ж')
     carbs = models.PositiveIntegerField(null=True, blank=True, verbose_name='У')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['-date'] #от свежих к старым
@@ -53,6 +57,7 @@ class Measurement(models.Model):
     thigh =  models.DecimalField(max_digits=4, decimal_places=1, blank=True, null=True, verbose_name="Бедро")
     biceps =  models.DecimalField(max_digits=4, decimal_places=1, blank=True, null=True, verbose_name="Бицепс")
     calf =  models.DecimalField(max_digits=4, decimal_places=1, blank=True, null=True, verbose_name="Голень")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['-date']
