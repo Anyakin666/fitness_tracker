@@ -1,26 +1,30 @@
 <!DOCTYPE html>
 <html lang="ru">
   <head>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Фитнес трекер{% endblock %}</title>
   </head>
-  <body>
+  <body class="bg-gray-50 text-gray-900">
+    <div class="max-w-3xl mx-auto px-4 py-6">
     <header>
-      <nav>
-        <a href="{% url 'index' %}">Главная</a>
-        <a href="{% url 'workout_list' %}">Тренировки</a>
-        <a href="{% url 'nutrition_list' %}">Питание</a>
-        <a href="{% url 'measurement_list' %}">Замеры</a>
+      <nav class="flex items-center gap-4 py-4 border-b border-gray-200 mb-6">
+        <a href="{% url 'index' %}" class="font-bold text-lg">Главная</a>
+        <a href="{% url 'workout_list' %}" class="text-purple-800 hover:underline font-semibold text-lg">Тренировки</a>
+        <a href="{% url 'nutrition_list' %}" class="text-purple-800 hover:underline font-semibold text-lg">Питание</a>
+        <a href="{% url 'measurement_list' %}" class="text-purple-800 hover:underline font-semibold text-lg">Замеры</a>
+        <div class="ml-auto">
         {% if user.is_authenticated %}
-          <span>{{ user.username }}</span>
-          <form method="post" action="{% url 'logout' %}" style="display:inline">
+          <span class="text-sm text-gray-600">{{ user.username }}</span>
+          <form method="post" action="{% url 'logout' %}"  class="inline">
           {% csrf_token %}
-          <button type="submit">Выйти</button>
+          <button class="text-sm text-red-600 hover:underline font-semibold">Выйти</button>
           </form>
         {% else %}
-          <a href="{% url 'login' %}">Войти</a>
+          <a href="{% url 'login' %}" class="text-sm text-blue-600 hover:underline font-semibold">Войти</a>
         {% endif %}
+        </div>
       </nav>
     </header>
 
@@ -31,5 +35,6 @@
     <footer>
       <small>Фитнес трекер</small>
     </footer>
+    </div>
   </body>
 </html>

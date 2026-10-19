@@ -3,20 +3,25 @@
 {% block title %}Тренировки{% endblock %}
 
 {% block content %}
-  <h1>Тренировки</h1>
-  <a href="{% url 'workout_add' %}">+ Добавить тренировку</a>
-  <ul>
+  <h1 class="text-2xl font-bold mb-4">Тренировки</h1>
+  <a href="{% url 'workout_add' %}" class="inline-block bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 mb-4">+ Добавить тренировку</a>
+  <div class="space-y-3">
     {% for workout in workouts %}
-      <li>
-        {{ workout.date|date:"d.m.Y" }} - {{ workout.get_title_display }} - {{ workout.duration_minutes }} мин
+    <div class="bg-white p-4 rounded shadow-sm flex justify-between items-center">
+      <div>
+        <div class="font-medium">{{ workout.date|date:"d.m.Y" }} - {{ workout.get_title_display }}</div>
+        <div class="text-sm text-gray-600">{{ workout.duration_minutes }} мин </div>
         {% if workout.notes %}
-          <br><small>{{ workout.notes|truncatewords:10 }}</small>
+          <div class="text-sm text-gray-500 mt-1">{{ workout.notes|truncatewords:10 }}</div>
         {% endif %}
-      </li>
-      <a href="{% url 'workout_edit' workout.pk %}">Редактировать</a>
-      <a href="{% url 'workout_delete' workout.pk %}">Удалить</a>
+      </div>
+      <div class="flex gap-3 text-sm">
+      <a href="{% url 'workout_edit' workout.pk %}" class="text-indigo-600 hover:underline">Редактировать</a>
+      <a href="{% url 'workout_delete' workout.pk %}" class="text-indigo-600 hover:underline">Удалить</a>
+      </div>
+      </div>
     {% empty %}
-      <li>Пока нет тренировок.</li>
+      <p class="text-gray-500">Пока нет тренировок.</p>
     {% endfor %}
-  </ul>
+    </div>
 {% endblock %}
