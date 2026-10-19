@@ -2,6 +2,26 @@
 <html lang="ru">
   <head>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+    form textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    background-color: #fff;
+    min-height: 6rem;
+    resize: vertical;
+    }
+
+    form input, form select {
+  width: 16rem;             /* 256px */
+  padding: 0.375rem 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Фитнес трекер{% endblock %}</title>
@@ -11,15 +31,15 @@
     <header>
       <nav class="flex items-center gap-4 py-4 border-b border-gray-200 mb-6">
         <a href="{% url 'index' %}" class="font-bold text-lg">Главная</a>
-        <a href="{% url 'workout_list' %}" class="text-purple-800 hover:underline font-semibold text-lg">Тренировки</a>
-        <a href="{% url 'nutrition_list' %}" class="text-purple-800 hover:underline font-semibold text-lg">Питание</a>
-        <a href="{% url 'measurement_list' %}" class="text-purple-800 hover:underline font-semibold text-lg">Замеры</a>
+        <a href="{% url 'workout_list' %}" class="text-indigo-600 hover:underline font-semibold text-lg">Тренировки</a>
+        <a href="{% url 'nutrition_list' %}" class="text-indigo-600 hover:underline font-semibold text-lg">Питание</a>
+        <a href="{% url 'measurement_list' %}" class="text-indigo-600 hover:underline font-semibold text-lg">Замеры</a>
         <div class="ml-auto">
         {% if user.is_authenticated %}
           <span class="text-sm text-gray-600">{{ user.username }}</span>
           <form method="post" action="{% url 'logout' %}"  class="inline">
           {% csrf_token %}
-          <button class="text-sm text-red-600 hover:underline font-semibold">Выйти</button>
+          <button class="text-sm text-indigo-600 hover:underline font-semibold">Выйти</button>
           </form>
         {% else %}
           <a href="{% url 'login' %}" class="text-sm text-blue-600 hover:underline font-semibold">Войти</a>

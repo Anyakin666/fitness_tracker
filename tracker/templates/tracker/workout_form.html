@@ -3,11 +3,31 @@
 {% block title %}Новая тренировка{% endblock %}
 
 {% block content %}
-  <h1>Новая тренировка</h1>
+  <h1 class="text-2xl font-bold mb-4">Новая тренировка</h1>
 
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Сохранить</button>
-  </form>
+  <form method="post" class="bg-white p-6 rounded shadow-sm max-w-lg">
+  {% csrf_token %}
+
+  <div class="flex items-center gap-4 mb-3">
+    <label for="{{ form.date.id_for_label }}" class="w-40 text-sm text-gray-700">Дата</label>
+    {{ form.date }}
+  </div>
+
+  <div class="flex items-center gap-4 mb-3">
+    <label for="{{ form.title.id_for_label }}" class="w-40 text-sm text-gray-700">Тип</label>
+    {{ form.title }}
+  </div>
+
+  <div class="flex items-center gap-4 mb-3">
+    <label for="{{ form.duration_minutes.id_for_label }}" class="w-40 text-sm text-gray-700">Длительность</label>
+    {{ form.duration_minutes }}
+  </div>
+
+  <div class="flex items-start gap-4 mb-3">
+    <label for="{{ form.notes.id_for_label }}" class="w-40 text-sm text-gray-700 pt-2">Заметки</label>
+    {{ form.notes }}
+  </div>
+
+  <button type="submit" class="inline-block bg-white text-indigo-600 border-2 border-indigo-600 px-5 py-2 rounded-lg hover:bg-indigo-50 font-medium mb-4">Сохранить</button>
+</form>
 {% endblock %}

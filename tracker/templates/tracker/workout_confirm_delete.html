@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
+
 {% block content %}
-  <h1>Удалить тренировку?</h1>
-  <p>{{ workout }}</p>
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit">Удалить</button>
-    <a href="{% url 'workout_list' %}">Отмена</a>
-  </form>
+  <div class="bg-white p-6 rounded shadow-sm max-w-lg">
+    <h1 class="text-xl font-bold mb-4">Удалить запись?</h1>
+    <p class="text-gray-700 mb-6">{{ object }}</p>
+    <form method="post" class="flex gap-3">
+      {% csrf_token %}
+      <button type="submit" class="bg-white-600 border-2 text-indigo-600 px-5 py-2 rounded-lg hover:bg-indigo-700 font-medium">Удалить</button>
+      <a href="{% url 'workout_list' %}" class="text-gray-600 hover:underline self-center">Отмена</a>
+    </form>
+  </div>
 {% endblock %}
