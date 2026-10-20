@@ -3,58 +3,105 @@
   <head>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-    form textarea {
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #d1d5db;
-    border-radius: 0.375rem;
-    font-size: 1rem;
-    background-color: #fff;
-    min-height: 6rem;
-    resize: vertical;
-    }
+      .burger-mobile {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      @media (min-width: 768px) {
+        .burger-mobile { display: none !important; }
+      }
 
-    form input, form select {
-  width: 16rem;             /* 256px */
-  padding: 0.375rem 0.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-}
+      form textarea {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        font-size: 1rem;
+        background-color: #fff;
+        min-height: 6rem;
+        resize: vertical;
+      }
+
+      form input, form select {
+        width: 16rem;
+        padding: 0.375rem 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+      }
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Фитнес трекер{% endblock %}</title>
   </head>
-  <body class="bg-gray-50 text-gray-900">
+  <body class="bg-indigo-50 text-gray-900">
     <div class="max-w-3xl mx-auto px-4 py-6">
-    <header>
-      <nav class="flex items-center gap-4 py-4 border-b border-gray-200 mb-6">
-        <a href="{% url 'index' %}" class="text-indigo-600 hover:underline font-semibold text-lg">Главная</a>
-        <a href="{% url 'workout_list' %}" class="text-indigo-600 hover:underline font-semibold text-lg">Тренировки</a>
-        <a href="{% url 'nutrition_list' %}" class="text-indigo-600 hover:underline font-semibold text-lg">Питание</a>
-        <a href="{% url 'measurement_list' %}" class="text-indigo-600 hover:underline font-semibold text-lg">Замеры</a>
-        <div class="ml-auto">
-        {% if user.is_authenticated %}
-          <span class="text-sm text-gray-600">{{ user.username }}</span>
-          <form method="post" action="{% url 'logout' %}"  class="inline">
-          {% csrf_token %}
-          <button class="text-sm text-indigo-600 hover:underline font-semibold">Выйти</button>
-          </form>
-        {% else %}
-          <a href="{% url 'login' %}" class="text-sm text-blue-600 hover:underline font-semibold">Войти</a>
-        {% endif %}
-        </div>
-      </nav>
-    </header>
+      <header>
+        <nav class="py-4 border-b border-gray-200 mb-6">
 
-    <main>
-      {% block content %}{% endblock %}
-    </main>
+          <!-- Мобильная шапка: логотип + бургер -->
+          <div class="burger-mobile">
+            <a href="{% url 'index' %}" class="font-bold text-lg">Фитнес трекер</a>
+            <details class="relative">
+              <summary class="list-none cursor-pointer p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+              </summary>
+              <div class="absolute right-0 mt-2 w-40 bg-white rounded shadow-lg p-4 flex flex-col gap-3 z-10">
+                {% if user.is_authenticated %}
+                  <span class="text-sm text-gray-600">{{ user.username }}</span>
+                  <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button class="text-sm text-indigo-600 hover:underline">Выйти</button>
+                  </form>
+                {% else %}
+                  <a href="{% url 'login' %}" class="text-sm text-indigo-600 hover:underline">Войти</a>
+                {% endif %}
+              </div>
+            </details>
+          </div>
 
-    <footer>
-      <small>Фитнес трекер</small>
-    </footer>
+          <!-- Ссылки на разделы -->
+          <div class="flex flex-wrap gap-4 mt-3 md:mt-0 md:items-center">
+            <a href="{% url 'index' %}" class="text-indigo-600 hover:underline">Главная</a>
+            <a href="{% url 'workout_list' %}" class="text-indigo-600 hover:underline">Тренировки</a>
+            <a href="{% url 'nutrition_list' %}" class="text-indigo-600 hover:underline">Питание</a>
+            <a href="{% url 'measurement_list' %}" class="text-indigo-600 hover:underline">Замеры</a>
+
+            <!-- Логин/выход (только десктоп) -->
+            <div class="hidden md:flex md:ml-auto items-center gap-3">
+              {% if user.is_authenticated %}
+                <span class="text-sm text-gray-600">{{ user.username }}</span>
+                <form method="post" action="{% url 'logout' %}">
+                  {% csrf_token %}
+                  <button class="text-sm text-indigo-600 hover:underline">Выйти</button>
+                </form>
+              {% else %}
+                <a href="{% url 'login' %}" class="text-sm text-indigo-600 hover:underline">Войти</a>
+              {% endif %}
+            </div>
+          </div>
+
+        </nav>
+      </header>
+
+      <main>
+        {% block content %}{% endblock %}
+      </main>
+
+      <footer>
+        <small>Фитнес трекер</small>
+      </footer>
     </div>
+
+    <script>
+      document.addEventListener('click', function(e) {
+        document.querySelectorAll('details[open]').forEach(function(d) {
+          if (!d.contains(e.target)) d.removeAttribute('open');
+        });
+      });
+    </script>
   </body>
 </html>
