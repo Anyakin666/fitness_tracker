@@ -63,4 +63,4 @@ class Measurement(models.Model):
         ordering = ['-date']
 
     def __str__(self):
-        return f'{self.date}: {self.weight}'
+        return f'{self.date}: {self.weight} kg'
