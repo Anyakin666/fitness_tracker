@@ -1,33 +1,36 @@
 {% extends 'base.html' %}
-
 {% block title %}Главная{% endblock %}
-
 {% block content %}
-  <h1>Мой дневник</h1>
+  <h1 class="text-2xl font-bold mb-4">Мой дневник</h1>
 
-  <h2>Последняя тренировка</h2>
-  {% if last_workout %}
-    <p>
-      {{ last_workout.date|date:"d.m.Y" }} — 
-      {{ last_workout.get_title_display }} — 
-      {{ last_workout.duration_minutes }} мин
-    </p>
-  {% else %}
-    <p>Пока нет тренировок.</p>
-  {% endif %}
-  <h2>Последний замер</h2>
-  {% if last_measurement %}
-    <p>
-      {{ last_measurement.date|date:"d.m.Y" }} — 
-      {{ last_measurement.weight }} кг
-    </p>
-  {% else %}
-    <p>Пока нет замеров.</p>
-  {% endif %}
-  <h2>Средние калории за 7 дней</h2>
-  {% if avg_calories %}
-    <p>{{ avg_calories|floatformat:0 }} ккал</p>
-  {% else %}
-    <p>Нет данных за последнюю неделю.</p>
-  {% endif %}
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="bg-white p-4 rounded shadow-sm">
+      <h2 class="text-sm text-gray-500 mb-1">Последняя тренировка</h2>
+      {% if last_workout %}
+        <div class="font-medium">{{ last_workout.date|date:"d.m.Y" }} — {{ last_workout.get_title_display }}</div>
+        <div class="text-sm text-gray-600">{{ last_workout.duration_minutes }} мин</div>
+      {% else %}
+        <p class="text-gray-500">Пока нет тренировок.</p>
+      {% endif %}
+    </div>
+
+    <div class="bg-white p-4 rounded shadow-sm">
+      <h2 class="text-sm text-gray-500 mb-1">Последний замер</h2>
+      {% if last_measurement %}
+        <div class="font-medium">{{ last_measurement.date|date:"d.m.Y" }}</div>
+        <div class="text-sm text-gray-600">{{ last_measurement.weight }} кг</div>
+      {% else %}
+        <p class="text-gray-500">Пока нет замеров.</p>
+      {% endif %}
+    </div>
+
+    <div class="bg-white p-4 rounded shadow-sm">
+      <h2 class="text-sm text-gray-500 mb-1">Средние калории за 7 дней</h2>
+      {% if avg_calories %}
+        <div class="font-medium">{{ avg_calories|floatformat:0 }} ккал</div>
+      {% else %}
+        <p class="text-gray-500">Вы не записывали калории на этой неделе.</p>
+      {% endif %}
+    </div>
+  </div>
 {% endblock %}

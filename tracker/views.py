@@ -11,8 +11,10 @@ from django.utils import timezone
 from django.urls import reverse_lazy
 from .forms import WorkoutForm, NutritionForm, MeasurementForm
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 
+@method_decorator(login_required, name='dispatch')
 class WorkoutCreateView(CreateView):
     model = Workout
     form_class = WorkoutForm
@@ -24,6 +26,7 @@ class WorkoutCreateView(CreateView):
         return super().form_valid(form)
 
 
+@method_decorator(login_required, name='dispatch')
 class NutritionCreateView(CreateView):
     model = NutritionEntry
     form_class = NutritionForm
@@ -35,7 +38,7 @@ class NutritionCreateView(CreateView):
             return super().form_valid(form)
     
 
-
+@method_decorator(login_required, name='dispatch')
 class MeasurementCreateView(CreateView):
     model = Measurement
     form_class = MeasurementForm
@@ -47,7 +50,7 @@ class MeasurementCreateView(CreateView):
             return super().form_valid(form)
     
 
-
+@method_decorator(login_required, name='dispatch')
 class WorkoutUpdateView(UpdateView):
     model = Workout
     form_class = WorkoutForm
@@ -55,12 +58,14 @@ class WorkoutUpdateView(UpdateView):
     success_url = reverse_lazy('workout_list')    
 
 
+@method_decorator(login_required, name='dispatch')
 class WorkoutDeleteView(DeleteView):
     model = Workout
     template_name = 'tracker/workout_confirm_delete.html'
     success_url = reverse_lazy('workout_list')    
 
 
+@method_decorator(login_required, name='dispatch')
 class MeasurementUpdateView(UpdateView):
     model = Measurement
     form_class = MeasurementForm
@@ -68,26 +73,29 @@ class MeasurementUpdateView(UpdateView):
     success_url = reverse_lazy('measurement_list')    
 
 
+@method_decorator(login_required, name='dispatch')
 class MeasurementDeleteView(DeleteView):
     model = Measurement
     template_name = 'tracker/measurement_confirm_delete.html'
     success_url = reverse_lazy('measurement_list')    
 
 
+@method_decorator(login_required, name='dispatch')
 class NutritionUpdateView(UpdateView):
     model = NutritionEntry
     form_class = NutritionForm
     template_name = 'tracker/nutrition_form.html'
     success_url = reverse_lazy('nutrition_list')
 
+
+@method_decorator(login_required, name='dispatch')
 class NutritionDeleteView(DeleteView):
     model = NutritionEntry
     template_name = 'tracker/nutrition_confirm_delete.html'
     success_url = reverse_lazy('nutrition_list')
 
 
-
-
+@method_decorator(login_required, name='dispatch')
 class WorkoutListView(ListView):
     model = Workout #джанго сам делает Workout.objects.all()
     template_name = 'tracker/workout_list.html' #какой шаблон рендерить
@@ -97,6 +105,7 @@ class WorkoutListView(ListView):
         return super().get_queryset().filter(user=self.request.user)
 
 
+@method_decorator(login_required, name='dispatch')
 class NutritionListView(ListView):
     model = NutritionEntry
     template_name = 'tracker/nutrition_list.html'
@@ -105,6 +114,8 @@ class NutritionListView(ListView):
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)
 
+
+@method_decorator(login_required, name='dispatch')
 class MeasurementListView(ListView):
     model = Measurement
     template_name = 'tracker/measurement_list.html'

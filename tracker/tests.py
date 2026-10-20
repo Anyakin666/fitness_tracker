@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from .models import Workout, NutritionEntry, Measurement
+from django.urls import reverse
 
 
 class WorkoutModelTest(TestCase):
@@ -87,4 +88,28 @@ class MeasurementModelTest(TestCase):
         )
         self.assertEqual(str(measurement), '2026-10-16: 65 kg')
 
+
+class WorkoutViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='viewer', password='test123')
+        self.other = User.objects.create_user(username='other', password='test123')
+
+        self.my_workout = Workout.objects.create(
+            user=self.user, date='2026-10-20', title='strength', duration_minutes=60,
+        )
+        self.other_workout = Workout.objects.create(
+            user=self.other, date='2026-10-19', title='cardio', duration_minutes=30,
+        )
+
+    def test_requires_login(self):
+        response = self.client.get(reverse('workout_list'))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    def test_shows_only_own_workouts(self):
+        self.client.login(username='viewer', password='test123')
+        response = self.client.get(reverse('workout_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.my_workout.get_title_display())
+        self.assertNotContains(response, self.other_workout.get_title_display())
 # Create your tests here.
