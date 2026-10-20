@@ -1,13 +1,47 @@
 {% extends 'base.html' %}
 
-{% block title %}Новые замеры{% endblock %}
+{% block title %}Новый замер{% endblock %}
 
 {% block content %}
-  <h1>Новые замеры</h1>
+  <h1 class="text-2xl font-bold mb-4">Новый замер</h1>
 
-  <form method="post">
+  <form method="post" class="bg-white p-6 rounded shadow-sm max-w-lg">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Сохранить</button>
+    <div class="flex items-center gap-4 mb-3">
+      <label for="{{ form.date.id_for_label }}" class="w-40 text-sm text-gray-700">Дата</label>
+      {{ form.date }}
+    </div>
+    <div class="flex items-center gap-4 mb-3">
+      <label for="{{ form.weight.id_for_label }}" class="w-40 text-sm text-gray-700">Вес, кг</label>
+      {{ form.weight }}
+    </div>
+    <div class="flex items-center gap-4 mb-3">
+      <label for="{{ form.waist.id_for_label }}" class="w-40 text-sm text-gray-700">Талия, см</label>
+      {{ form.waist }}
+    </div>
+    <div class="flex items-center gap-4 mb-3">
+      <label for="{{ form.hips.id_for_label }}" class="w-40 text-sm text-gray-700">Бёдра, см</label>
+      {{ form.hips }}
+    </div>
+    <div class="flex items-center gap-4 mb-3">
+      <label for="{{ form.chest.id_for_label }}" class="w-40 text-sm text-gray-700">Грудь, см</label>
+      {{ form.chest }}
+    </div>
+    <div class="flex items-center gap-4 mb-3">
+      <label for="{{ form.thigh.id_for_label }}" class="w-40 text-sm text-gray-700">Бедро, см</label>
+      {{ form.thigh }}
+    </div>
+    <div class="flex items-center gap-4 mb-3">
+      <label for="{{ form.biceps.id_for_label }}" class="w-40 text-sm text-gray-700">Бицепс, см</label>
+      {{ form.biceps }}
+    </div>
+    <div class="flex items-center gap-4 mb-3">
+      <label for="{{ form.calf.id_for_label }}" class="w-40 text-sm text-gray-700">Икра, см</label>
+      {{ form.calf }}
+    </div>
+    <div class="flex gap-3 mt-2">
+      <button type="submit" class="inline-block bg-white text-indigo-600 border-2 border-indigo-600 px-5 py-2 rounded-lg hover:bg-indigo-50 font-medium">Сохранить</button>
+      <a href="{% url 'measurement_list' %}" class="text-gray-600 hover:underline self-center">Отмена</a>
+    </div>
   </form>
 {% endblock %}
