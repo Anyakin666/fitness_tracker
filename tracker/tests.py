@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from .models import Workout, NutritionEntry, Measurement
 from django.urls import reverse
+from decimal import Decimal
 
 
 class WorkoutModelTest(TestCase):
@@ -158,4 +159,76 @@ class MeasurementViewTest(TestCase):
             self.assertEqual(response.status_code, 200)
             self.assertContains(response, self.my_measurement.weight)
             self.assertNotContains(response, self.other_measurement.weight)        
-# Create your tests here.
+
+
+class WorkoutCreateViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='test', password='test123')
+
+    def test_requires_login(self):
+        response = self.client.get(reverse('workout_add'))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    def test_create_workout(self):
+        self.client.login(username='test', password='test123')
+        response = self.client.post(reverse('workout_add'), {
+            'date': '2026-10-20',
+            'title': 'strength',
+            'duration_minutes': 60,
+            'notes': 'kokopuhi',
+        })
+        self.assertEqual(response.status_code, 302)  
+        self.assertEqual(Workout.objects.count(), 1)
+        workout = Workout.objects.first()
+        self.assertEqual(workout.user, self.user)
+        self.assertEqual(workout.title, 'strength')
+        self.assertEqual(workout.notes, 'kokopuhi')
+
+
+class NutritionCreateViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='test2', password='test123')
+
+    def test_requires_login(self):
+        response = self.client.get(reverse('nutrition_add'))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    def test_create_nutrition(self):
+        self.client.login(username='test2', password='test123')
+        response = self.client.post(reverse('nutrition_add'), {
+            'date': '2026-10-20',
+            'calories': 1950,
+            'protein': 120,
+        })
+        self.assertEqual(response.status_code, 302)  
+        self.assertEqual(NutritionEntry.objects.count(), 1)
+        nutrition = NutritionEntry.objects.first()
+        self.assertEqual(nutrition.user, self.user)
+        self.assertEqual(nutrition.calories, 1950)
+        self.assertEqual(nutrition.protein, 120)
+
+
+class MeasurementCreateViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='test3', password='test123')
+
+    def test_requires_login(self):
+        response = self.client.get(reverse('measurement_add'))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    def test_create_measurement(self):
+        self.client.login(username='test3', password='test123')
+        response = self.client.post(reverse('measurement_add'), {
+            'date' : '2026-10-20',
+            'weight' : '61.15',
+            'waist': '74.1',
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Measurement.objects.count(), 1)
+        measurement = Measurement.objects.first()
+        self.assertEqual(measurement.user, self.user)
+        self.assertEqual(measurement.weight, Decimal('61.15'))
+        self.assertEqual(measurement.waist, Decimal('74.1'))
