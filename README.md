@@ -55,6 +55,7 @@ python manage.py test tracker
 
 ## Структура проекта
 
+```
 fitness-tracker/
 ├── fitness_tracker/      # настройки проекта
 ├── tracker/              # основное приложение
@@ -69,6 +70,7 @@ fitness-tracker/
 ├── .github/workflows/    # CI (GitHub Actions)
 ├── requirements.txt
 └── manage.py
+```
 
 ## Скриншоты
 
