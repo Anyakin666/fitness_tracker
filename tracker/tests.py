@@ -112,4 +112,50 @@ class WorkoutViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.my_workout.get_title_display())
         self.assertNotContains(response, self.other_workout.get_title_display())
+
+
+class NutritionViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='viewer', password='test123')
+        self.other = User.objects.create_user(username='other', password='test123')
+        
+        self.my_nutrition = NutritionEntry.objects.create(
+            user=self.user, date='2026-10-20', calories=1800)
+        self.other_nutrition = NutritionEntry.objects.create(
+            user=self.other, date='2026-10-19', calories=1600)
+
+    def test_requires_login(self):
+            response = self.client.get(reverse('nutrition_list'))
+            self.assertEqual(response.status_code, 302)
+            self.assertIn('/accounts/login/', response.url)
+
+    def test_shows_only_own_nutritions(self):
+            self.client.login(username='viewer', password='test123')
+            response = self.client.get(reverse('nutrition_list'))
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, self.my_nutrition.calories)
+            self.assertNotContains(response, self.other_nutrition.calories)
+
+
+class MeasurementViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='viewer', password='test123')
+        self.other = User.objects.create_user(username='other', password='test123')
+        
+        self.my_measurement = Measurement.objects.create(
+            user=self.user, date='2026-10-20', weight=60.00, waist=70)
+        self.other_measurement = Measurement.objects.create(
+            user=self.other, date='2026-10-19', weight=50.00, waist=90)
+
+    def test_requires_login(self):
+            response = self.client.get(reverse('measurement_list'))
+            self.assertEqual(response.status_code, 302)
+            self.assertIn('/accounts/login/', response.url)
+
+    def test_shows_only_own_measurements(self):
+            self.client.login(username='viewer', password='test123')
+            response = self.client.get(reverse('measurement_list'))
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, self.my_measurement.weight)
+            self.assertNotContains(response, self.other_measurement.weight)        
 # Create your tests here.
