@@ -2,7 +2,12 @@
 <html lang="ru">
   <head>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style>
+    <style type="text/tailwindcss">
+      @theme {
+        --color-primary: #4f46e5;
+        --color-primary-light: #eef2ff;
+        --color-primary-dark: #4338ca;
+      }
       .burger-mobile {
         display: flex;
         align-items: center;
@@ -35,7 +40,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Фитнес трекер{% endblock %}</title>
   </head>
-  <body class="bg-indigo-50 text-gray-900">
+  <body class="bg-primary-light text-gray-900">
     <div class="max-w-3xl mx-auto px-4 py-6">
       <header>
         <nav class="py-4 border-b border-gray-200 mb-6">
@@ -54,10 +59,10 @@
                   <span class="text-sm text-gray-600">{{ user.username }}</span>
                   <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
-                    <button class="text-sm text-indigo-600 hover:underline">Выйти</button>
+                    <button class="text-sm text-primary hover:underline">Выйти</button>
                   </form>
                 {% else %}
-                  <a href="{% url 'login' %}" class="text-sm text-indigo-600 hover:underline">Войти</a>
+                  <a href="{% url 'login' %}" class="text-sm text-primary hover:underline">Войти</a>
                 {% endif %}
               </div>
             </details>
@@ -65,10 +70,10 @@
 
           <!-- Ссылки на разделы -->
           <div class="flex flex-wrap gap-4 mt-3 md:mt-0 md:items-center">
-            <a href="{% url 'index' %}" class="text-indigo-600 hover:underline">Главная</a>
-            <a href="{% url 'workout_list' %}" class="text-indigo-600 hover:underline">Тренировки</a>
-            <a href="{% url 'nutrition_list' %}" class="text-indigo-600 hover:underline">Питание</a>
-            <a href="{% url 'measurement_list' %}" class="text-indigo-600 hover:underline">Замеры</a>
+            <a href="{% url 'index' %}" class="text-primary hover:underline">Главная</a>
+            <a href="{% url 'workout_list' %}" class="text-primary hover:underline">Тренировки</a>
+            <a href="{% url 'nutrition_list' %}" class="text-primary hover:underline">Питание</a>
+            <a href="{% url 'measurement_list' %}" class="text-primary hover:underline">Замеры</a>
 
             <!-- Логин/выход (только десктоп) -->
             <div class="hidden md:flex md:ml-auto items-center gap-3">
@@ -76,10 +81,10 @@
                 <span class="text-sm text-gray-600">{{ user.username }}</span>
                 <form method="post" action="{% url 'logout' %}">
                   {% csrf_token %}
-                  <button class="text-sm text-indigo-600 hover:underline">Выйти</button>
+                  <button class="text-sm text-primary hover:underline">Выйти</button>
                 </form>
               {% else %}
-                <a href="{% url 'login' %}" class="text-sm text-indigo-600 hover:underline">Войти</a>
+                <a href="{% url 'login' %}" class="text-sm text-primary hover:underline">Войти</a>
               {% endif %}
             </div>
           </div>
