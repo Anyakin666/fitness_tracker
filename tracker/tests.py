@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from .models import Workout, NutritionEntry, Measurement
 from django.urls import reverse
 from decimal import Decimal
+from datetime import date
 
 
 class WorkoutModelTest(TestCase):
@@ -232,3 +233,150 @@ class MeasurementCreateViewTest(TestCase):
         self.assertEqual(measurement.user, self.user)
         self.assertEqual(measurement.weight, Decimal('61.15'))
         self.assertEqual(measurement.waist, Decimal('74.1'))
+
+
+class WorkoutDeleteViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='test', password='test123')
+        self.workout = Workout.objects.create(
+            user=self.user, date='2026-10-20', title='strength', duration_minutes=60,
+        )
+
+    def test_requires_login(self):
+        response = self.client.get(reverse('workout_delete', args=[self.workout.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    def test_delete_workout(self):
+        self.client.login(username='test', password='test123')
+        response = self.client.post(reverse('workout_delete', args=[self.workout.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Workout.objects.count(), 0)
+
+
+class NutritionDeleteViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='test', password='test123')
+        self.nutrition = NutritionEntry.objects.create(
+            user=self.user, date='2026-10-20', calories=1800,
+        )
+
+    def test_requires_login(self):
+        response = self.client.get(reverse('nutrition_delete', args=[self.nutrition.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    def test_delete_nutrition(self):
+        self.client.login(username='test', password='test123')
+        response = self.client.post(reverse('nutrition_delete', args=[self.nutrition.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(NutritionEntry.objects.count(), 0)
+
+
+class MeasurementDeleteViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='test', password='test123')
+        self.measurement = Measurement.objects.create(
+            user=self.user, date='2026-10-20', weight=60, waist=50,
+        )
+
+    def test_requires_login(self):
+        response = self.client.get(reverse('measurement_delete', args=[self.measurement.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    def test_delete_measurement(self):
+        self.client.login(username='test', password='test123')
+        response = self.client.post(reverse('measurement_delete', args=[self.measurement.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Measurement.objects.count(), 0)
+
+
+class WorkoutUpdateViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='editor', password='test123')
+        self.workout = Workout.objects.create(
+            user=self.user, date='2026-10-20', title='strength',
+            duration_minutes=60, notes='old notes',
+        )
+
+    def test_requires_login(self):
+        response = self.client.get(reverse('workout_edit', args=[self.workout.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    def test_update_workout(self):
+        self.client.login(username='editor', password='test123')
+        response = self.client.post(reverse('workout_edit', args=[self.workout.pk]), {
+            'date': '2026-10-21',
+            'title': 'cardio',
+            'duration_minutes': 45,
+            'notes': 'new notes',
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.workout.refresh_from_db()  
+        self.assertEqual(self.workout.title, 'cardio')
+        self.assertEqual(self.workout.duration_minutes, 45)
+        self.assertEqual(self.workout.notes, 'new notes')
+        self.assertEqual(self.workout.date, date(2026, 10, 21))
+
+
+class NutritionUpdateViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='editor', password='test123')
+        self.nutrition = NutritionEntry.objects.create(
+            user=self.user, date='2026-10-20', calories=1800,
+            protein=120, fat=50, carbs=200,
+        )
+
+    def test_requires_login(self):
+        response = self.client.get(reverse('nutrition_edit', args=[self.nutrition.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    def test_update_nutrition(self):
+        self.client.login(username='editor', password='test123')
+        response = self.client.post(reverse('nutrition_edit', args=[self.nutrition.pk]), {
+            'date': '2026-10-21',
+            'calories': 2100,
+            'protein': 130,
+            'fat': 61,
+            'carbs' : 210,
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.nutrition.refresh_from_db()  
+        self.assertEqual(self.nutrition.calories, 2100)
+        self.assertEqual(self.nutrition.protein, 130)
+        self.assertEqual(self.nutrition.fat, 61)
+        self.assertEqual(self.nutrition.carbs, 210)
+        self.assertEqual(self.nutrition.date, date(2026, 10, 21))
+
+
+class MeasurementUpdateViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='editor', password='test123')
+        self.measurement = Measurement.objects.create(
+            user=self.user, date='2026-10-20', weight=60.00, waist=74.1
+        )
+
+    def test_requires_login(self):
+        response = self.client.get(reverse('measurement_edit', args=[self.measurement.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    def test_update_measurement(self):
+        self.client.login(username='editor', password='test123')
+        response = self.client.post(reverse('measurement_edit', args=[self.measurement.pk]), {
+            'date': '2026-10-21',
+            'weight' : '70.00',
+            'waist' : '75.1',
+        })
+        self.assertEqual(response.status_code, 302)
+
+        self.measurement.refresh_from_db()  
+        self.assertEqual(self.measurement.weight, Decimal('70.00'))
+        self.assertEqual(self.measurement.waist, Decimal('75.1'))
+        self.assertEqual(self.measurement.date, date(2026, 10, 21))
+        
