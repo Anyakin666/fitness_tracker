@@ -9,9 +9,15 @@ from django.db.models import Avg
 from django.utils import timezone
 
 from django.urls import reverse_lazy
-from .forms import WorkoutForm, NutritionForm, MeasurementForm
+from .forms import WorkoutForm, NutritionForm, MeasurementForm, SignUpForm
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+
+
+class SignUpView(CreateView):
+    form_class = SignUpForm
+    template_name = 'registration/signup.html'
+    success_url = reverse_lazy('login')
 
 
 @method_decorator(login_required, name='dispatch')

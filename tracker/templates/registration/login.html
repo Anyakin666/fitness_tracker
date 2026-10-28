@@ -7,4 +7,7 @@
     {{ form.as_p }}
     <button type="submit" class="bg-white text-primary border-2 border-primary px-5 py-2 rounded-lg hover:bg-primary-light font-medium">Войти</button>
   </form>
+  <p class="mt-4 text-sm text-gray-600">
+  Нет аккаунта? <a href="{% url 'signup' %}" class="text-primary hover:underline">Зарегистрироваться</a>
+  </p>
 {% endblock %}

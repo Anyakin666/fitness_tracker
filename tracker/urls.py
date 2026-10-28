@@ -15,4 +15,5 @@ urlpatterns = [
     path('nutrition/<int:pk>/delete/', views.NutritionDeleteView.as_view(), name='nutrition_delete'),
     path('measurement/<int:pk>/edit/', views.MeasurementUpdateView.as_view(), name='measurement_edit'),
     path('measurement/<int:pk>/delete/', views.MeasurementDeleteView.as_view(), name='measurement_delete'),
+    path('accounts/signup/', views.SignUpView.as_view(), name='signup'),
 ]
