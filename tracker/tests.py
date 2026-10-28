@@ -380,3 +380,33 @@ class MeasurementUpdateViewTest(TestCase):
         self.assertEqual(self.measurement.waist, Decimal('75.1'))
         self.assertEqual(self.measurement.date, date(2026, 10, 21))
         
+
+class IndexViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='home', password='test123')
+        self.other = User.objects.create_user(username='otherhome', password='test123')
+
+        Workout.objects.create(user=self.user, date='2026-10-20', title='strength', duration_minutes=60)
+        Workout.objects.create(user=self.other, date='2026-10-19', title='cardio', duration_minutes=30)
+
+        NutritionEntry.objects.create(user=self.user, date='2026-10-20', calories=2000)
+        NutritionEntry.objects.create(user=self.other, date='2026-10-19', calories=1000)
+
+        Measurement.objects.create(user=self.user, date='2026-10-20', weight=65)
+        Measurement.objects.create(user=self.other, date='2026-10-19', weight=59)
+
+    def test_requires_login(self):
+        response = self.client.get(reverse('index'))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    def test_shows_own_summary(self):
+        self.client.login(username='home', password='test123')
+        response = self.client.get(reverse('index'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Силовая')
+        self.assertNotContains(response, 'Кардио')
+        self.assertContains(response, '2000')
+        self.assertNotContains(response, '1000')  
+        self.assertContains(response, '65')  
+        self.assertNotContains(response, '59')
