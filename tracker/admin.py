@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Workout, NutritionEntry, Measurement
+from .models import Workout, NutritionEntry, Measurement, UserProfile
 
 @admin.register(Workout)
 class WorkoutAdmin(admin.ModelAdmin):
@@ -10,3 +10,4 @@ class WorkoutAdmin(admin.ModelAdmin):
     search_fields = ('notes',)
 admin.site.register(NutritionEntry)
 admin.site.register(Measurement)
+admin.site.register(UserProfile)

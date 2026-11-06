@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 # Create your models here.
@@ -64,3 +65,54 @@ class Measurement(models.Model):
 
     def __str__(self):
         return f'{self.date}: {self.weight} kg'
+
+
+class UserProfile(models.Model):
+    class Goal(models.TextChoices):
+        LOSE = 'lose', 'Похудение'
+        MAINTAIN = 'maintain', 'Поддержание веса'
+        GAIN = 'gain', 'Набор массы'
+
+    class Gender(models.TextChoices):
+        MALE = 'male', 'Мужской'
+        FEMALE = 'female', 'Женский'
+
+    class Activity(models.TextChoices):
+        SEDENTARY = 'sedentary', 'Сидячий образ жизни'
+        LIGHT = 'light', 'Лёгкая активность (1-3 раза в неделю)'
+        MODERATE = 'moderate', 'Средняя (3-5 раз в неделю)'
+        ACTIVE = 'active', 'Высокая (6-7 раз в неделю)'
+        VERY_ACTIVE = 'very_active', 'Очень высокая (физическая работа)'
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    activity = models.CharField(
+        max_length=20,
+        choices=Activity.choices,
+        default=Activity.MODERATE,
+        verbose_name='Активность'
+    )
+    goal = models.CharField(
+        max_length=20,
+        choices=Goal.choices,
+        default=Goal.MAINTAIN,
+        verbose_name='Цель'
+    )
+    gender = models.CharField(
+        max_length=10,
+        choices=Gender.choices,
+        verbose_name='Пол'
+    )
+    age = models.PositiveIntegerField(verbose_name='Возраст', validators=[MinValueValidator(14), MaxValueValidator(100)])
+    weight = models.DecimalField(
+        max_digits=5, decimal_places=2,
+        verbose_name='Вес, кг',
+        validators=[MinValueValidator(30), MaxValueValidator(300)],
+    )
+    height = models.PositiveIntegerField(verbose_name='Рост', validators=[MinValueValidator(100), MaxValueValidator(250)])
+
+    class Meta:
+        verbose_name = 'Профиль'
+        verbose_name_plural = 'Профили'
+
+    def __str__(self):
+        return f"{self.user.username} — {self.get_goal_display()}"
