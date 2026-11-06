@@ -15,4 +15,6 @@ urlpatterns = [
     path('nutrition/<int:pk>/delete/', views.NutritionDeleteView.as_view(), name='nutrition_delete'),
     path('measurement/<int:pk>/edit/', views.MeasurementUpdateView.as_view(), name='measurement_edit'),
     path('measurement/<int:pk>/delete/', views.MeasurementDeleteView.as_view(), name='measurement_delete'),
+    path('profile/', views.UserProfileDetailView.as_view(), name='profile'),
+    path('profile/edit/', views.UserProfileUpdateView.as_view(), name='profile_edit'),
 ]

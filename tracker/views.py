@@ -1,17 +1,19 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .models import Workout, NutritionEntry, Measurement
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
+from .models import Workout, NutritionEntry, Measurement, UserProfile
 from datetime import timedelta
 
 from django.db.models import Avg
 from django.utils import timezone
 
 from django.urls import reverse_lazy
-from .forms import WorkoutForm, NutritionForm, MeasurementForm, SignUpForm
+from .forms import WorkoutForm, NutritionForm, MeasurementForm, SignUpForm, UserProfileForm
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+
+from tracker.utils import calculate_calories
 
 
 class SignUpView(CreateView):
@@ -54,6 +56,53 @@ class MeasurementCreateView(CreateView):
     def form_valid(self, form):
             form.instance.user = self.request.user
             return super().form_valid(form)
+
+
+@method_decorator(login_required, name='dispatch')
+class UserProfileDetailView(DetailView):
+    model = UserProfile
+    template_name = 'tracker/userprofile_detail.html'
+
+    def get_object(self):
+        profile, _ = UserProfile.objects.get_or_create(
+            user=self.request.user, 
+            defaults={
+                'goal': 'maintain',
+                'gender': 'male',
+                'age': 25,
+                'height': 170,
+                'weight': 70,
+                'activity': 'moderate',
+            }
+        )
+        return profile
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['calories'] = calculate_calories(self.object)
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class UserProfileUpdateView(UpdateView):
+    model = UserProfile
+    form_class = UserProfileForm
+    template_name = 'tracker/userprofile_form.html'
+    success_url = reverse_lazy('profile')
+
+    def get_object(self):
+        profile, _ = UserProfile.objects.get_or_create(
+            user=self.request.user,
+            defaults={
+                'goal': 'maintain',
+                'gender': 'male',
+                'age': 25,
+                'height': 170,
+                'weight': 70,
+                'activity': 'moderate',
+            }
+        )
+        return profile
     
 
 @method_decorator(login_required, name='dispatch')
