@@ -110,7 +110,10 @@ class WorkoutUpdateView(UpdateView):
     model = Workout
     form_class = WorkoutForm
     template_name = 'tracker/workout_form.html'
-    success_url = reverse_lazy('workout_list')    
+    success_url = reverse_lazy('workout_list')   
+    
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)     
 
 
 @method_decorator(login_required, name='dispatch')
@@ -119,13 +122,19 @@ class WorkoutDeleteView(DeleteView):
     template_name = 'tracker/workout_confirm_delete.html'
     success_url = reverse_lazy('workout_list')    
 
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)    
+
 
 @method_decorator(login_required, name='dispatch')
 class MeasurementUpdateView(UpdateView):
     model = Measurement
     form_class = MeasurementForm
     template_name = 'tracker/measurement_form.html'
-    success_url = reverse_lazy('measurement_list')    
+    success_url = reverse_lazy('measurement_list')   
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -134,6 +143,9 @@ class MeasurementDeleteView(DeleteView):
     template_name = 'tracker/measurement_confirm_delete.html'
     success_url = reverse_lazy('measurement_list')    
 
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)
+    
 
 @method_decorator(login_required, name='dispatch')
 class NutritionUpdateView(UpdateView):
@@ -142,12 +154,18 @@ class NutritionUpdateView(UpdateView):
     template_name = 'tracker/nutrition_form.html'
     success_url = reverse_lazy('nutrition_list')
 
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)
+
 
 @method_decorator(login_required, name='dispatch')
 class NutritionDeleteView(DeleteView):
     model = NutritionEntry
     template_name = 'tracker/nutrition_confirm_delete.html'
     success_url = reverse_lazy('nutrition_list')
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)
 
 
 @method_decorator(login_required, name='dispatch')

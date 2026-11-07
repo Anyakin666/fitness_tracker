@@ -410,3 +410,60 @@ class IndexViewTest(TestCase):
         self.assertNotContains(response, '1000')  
         self.assertContains(response, '65')  
         self.assertNotContains(response, '59')
+
+
+class WorkoutSecurityTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='owner', password='test123')
+        self.other = User.objects.create_user(username='intruder', password='test123')
+        self.workout = Workout.objects.create(
+            user=self.user, date='2026-10-20', title='strength', duration_minutes=60,
+        )
+
+    def test_cannot_edit_others_workout(self):
+        self.client.login(username='intruder', password='test123')
+        response = self.client.get(reverse('workout_edit', args=[self.workout.pk]))
+        self.assertEqual(response.status_code, 404)
+
+    def test_cannot_delete_others_workout(self):
+        self.client.login(username='intruder', password='test123')
+        response = self.client.post(reverse('workout_delete', args=[self.workout.pk]))
+        self.assertEqual(response.status_code, 404)
+
+
+class NutritionSecurityTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='owner', password='test123')
+        self.other = User.objects.create_user(username='intruder', password='test123')
+        self.nutrition = NutritionEntry.objects.create(
+            user=self.user, date='2026-10-20', calories=1800, protein=97, fat=50, carbs=200,
+        )
+
+    def test_cannot_edit_others_nutritions(self):
+        self.client.login(username='intruder', password='test123')
+        response = self.client.get(reverse('nutrition_edit', args=[self.nutrition.pk]))
+        self.assertEqual(response.status_code, 404)
+
+    def test_cannot_delete_others_nutritions(self):
+        self.client.login(username='intruder', password='test123')
+        response = self.client.post(reverse('nutrition_delete', args=[self.nutrition.pk]))
+        self.assertEqual(response.status_code, 404)
+
+
+class MeasurementSecurityTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='owner', password='test123')
+        self.other = User.objects.create_user(username='intruder', password='test123')
+        self.measurement = Measurement.objects.create(
+            user=self.user, date='2026-10-20', weight=65, waist=74,
+        )
+
+    def test_cannot_edit_others_measurement(self):
+        self.client.login(username='intruder', password='test123')
+        response = self.client.get(reverse('measurement_edit', args=[self.measurement.pk]))
+        self.assertEqual(response.status_code, 404)
+
+    def test_cannot_delete_others_measurement(self):
+        self.client.login(username='intruder', password='test123')
+        response = self.client.post(reverse('measurement_delete', args=[self.measurement.pk]))
+        self.assertEqual(response.status_code, 404)
