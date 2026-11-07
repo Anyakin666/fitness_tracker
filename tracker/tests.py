@@ -1,10 +1,11 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from .models import Workout, NutritionEntry, Measurement
+from .models import Workout, NutritionEntry, Measurement, UserProfile
 from django.urls import reverse
 from decimal import Decimal
 from datetime import date
-
+from django.utils import timezone
+from .utils import calculate_calories
 
 class WorkoutModelTest(TestCase):
     def setUp(self):
@@ -467,3 +468,39 @@ class MeasurementSecurityTest(TestCase):
         self.client.login(username='intruder', password='test123')
         response = self.client.post(reverse('measurement_delete', args=[self.measurement.pk]))
         self.assertEqual(response.status_code, 404)
+
+
+class IndexDeviationTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='dev', password='test123')
+        self.profile = UserProfile.objects.create(
+            user=self.user, goal='maintain', gender='male',
+            age=30, height=180, weight=80, activity='moderate',
+        )
+
+    def test_deviation_ok(self):
+        target = calculate_calories(self.profile)
+        NutritionEntry.objects.create(user=self.user, date=timezone.now().date(), calories=target)
+        self.client.login(username='dev', password='test123')
+        response = self.client.get(reverse('index'))
+        self.assertEqual(response.context['deviation'], 'ok')
+
+    def test_deviation_over(self):
+        target = calculate_calories(self.profile)
+        NutritionEntry.objects.create(user=self.user, date=timezone.now().date(), calories=target + 200)
+        self.client.login(username='dev', password='test123')
+        response = self.client.get(reverse('index'))
+        self.assertEqual(response.context['deviation'], 'over')
+
+    def test_deviation_under(self):
+        target = calculate_calories(self.profile)
+        NutritionEntry.objects.create(user=self.user, date=timezone.now().date(), calories=target - 200)
+        self.client.login(username='dev', password='test123')
+        response = self.client.get(reverse('index'))
+        self.assertEqual(response.context['deviation'], 'under')
+
+    def test_deviation_none_without_profile(self):
+        self.profile.delete()
+        self.client.login(username='dev', password='test123')
+        response = self.client.get(reverse('index'))
+        self.assertIsNone(response.context['deviation'])
