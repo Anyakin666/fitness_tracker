@@ -184,11 +184,25 @@ class MeasurementListView(ListView):
 def index(request):
     last_workout = Workout.objects.filter(user=request.user).first()
     last_measurement = Measurement.objects.filter(user=request.user).first()
+    profile = UserProfile.objects.filter(user=request.user).first()
+    calories_target = calculate_calories(profile) if profile else None
     week_ago = timezone.now().date() - timedelta(days=7)
     week_entries = NutritionEntry.objects.filter(user=request.user, date__gte=week_ago)
     avg_calories = week_entries.aggregate(Avg('calories'))['calories__avg']
+    deviation = None
+    if calories_target and avg_calories:
+        diff = avg_calories - calories_target
+        if abs(diff) <= 100:
+            deviation = 'ok'
+        elif diff > 0:
+            deviation = 'over'
+        else:
+            deviation = 'under'
+    
     return render(request, 'index.html', context={
         'last_workout' : last_workout,
         'last_measurement' : last_measurement,
         'avg_calories': avg_calories,
+        'calories_target': calories_target,
+        'deviation': deviation,
     }) 
