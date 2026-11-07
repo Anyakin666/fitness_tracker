@@ -23,6 +23,9 @@
       {% elif deviation == 'over' %}⚠️ Вы переедали на этой неделе.
       {% else %}⚠️ Вы недоедали на этой неделе.{% endif %}
     </p>
+    {% if quote %}
+      <p class="text-sm text-gray-500 mt-1 italic">{{ quote }}</p>
+    {% endif %}
   </div>
   {% endif %}  
   

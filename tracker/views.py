@@ -13,7 +13,7 @@ from .forms import WorkoutForm, NutritionForm, MeasurementForm, SignUpForm, User
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
-from tracker.utils import calculate_calories
+from tracker.utils import calculate_calories, get_quote
 
 
 class SignUpView(CreateView):
@@ -211,7 +211,6 @@ def index(request):
     bar_percent = None
     if calories_target and avg_calories:
         bar_percent = min(round(avg_calories / calories_target * 100), 100)
-    if calories_target and avg_calories:
         diff = avg_calories - calories_target
         if abs(diff) <= 100:
             deviation = 'ok'
@@ -219,6 +218,8 @@ def index(request):
             deviation = 'over'
         else:
             deviation = 'under'
+
+    quote = get_quote(deviation)
     
     return render(request, 'index.html', context={
         'last_workout' : last_workout,
@@ -227,4 +228,5 @@ def index(request):
         'calories_target': calories_target,
         'deviation': deviation,
         'bar_percent': bar_percent,
+        'quote' : quote,
     }) 
