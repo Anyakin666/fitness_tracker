@@ -208,6 +208,9 @@ def index(request):
     week_entries = NutritionEntry.objects.filter(user=request.user, date__gte=week_ago)
     avg_calories = week_entries.aggregate(Avg('calories'))['calories__avg']
     deviation = None
+    bar_percent = None
+    if calories_target and avg_calories:
+        bar_percent = min(round(avg_calories / calories_target * 100), 100)
     if calories_target and avg_calories:
         diff = avg_calories - calories_target
         if abs(diff) <= 100:
@@ -223,4 +226,5 @@ def index(request):
         'avg_calories': avg_calories,
         'calories_target': calories_target,
         'deviation': deviation,
+        'bar_percent': bar_percent,
     }) 

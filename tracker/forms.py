@@ -38,10 +38,10 @@ class NutritionForm(forms.ModelForm):
                         attrs={'type': 'date'},  # HTML5-календарь
                     ),
                 }
-        def __init__(self, *args, **kwargs):
-                super().__init__(*args, **kwargs)
-                self.fields['date'].initial = timezone.now().date()
-                self.fields['date'].input_formats = ['%Y-%m-%d']
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['date'].initial = timezone.now().date()
+        self.fields['date'].input_formats = ['%Y-%m-%d']
 
 
 class MeasurementForm(forms.ModelForm):

@@ -2,8 +2,31 @@
 {% block title %}Главная{% endblock %}
 {% block content %}
   <h1 class="text-2xl font-bold mb-4">Мой дневник</h1>
-  
+
+
   {% if deviation %}
+  <div class="bg-white p-4 rounded shadow-sm mb-6">
+    <div class="flex justify-between text-sm text-gray-600 mb-2">
+      <span>Средние калории</span>
+      <span>{{ avg_calories|floatformat:0 }} / {{ calories_target }} ккал</span>
+    </div>
+    <div class="w-full bg-gray-200 rounded-full h-2">
+      <div class="h-2 rounded-full
+        {% if deviation == 'ok' %}bg-primary
+        {% elif deviation == 'over' %}bg-red-500
+        {% else %}bg-amber-500{% endif %}"
+        style="width: {{ bar_percent }} %">
+      </div>
+    </div>
+    <p class="text-primary font-medium mt-2">
+      {% if deviation == 'ok' %}✅ Вы хорошо держитесь плана! 🎉
+      {% elif deviation == 'over' %}⚠️ Вы переедали на этой неделе.
+      {% else %}⚠️ Вы недоедали на этой неделе.{% endif %}
+    </p>
+  </div>
+  {% endif %}  
+  
+  <!-- {% if deviation %}
   <div class="bg-white p-4 rounded shadow-sm mb-6">
     {% if deviation == 'ok' %}
       <p class="text-primary font-medium">✅ Вы хорошо держитесь плана! 🎉</p>
@@ -13,7 +36,7 @@
       <p class="text-primary font-medium">⚠️ Вы недоедали на этой неделе. Стоит добавить калорий.</p>
     {% endif %}
   </div>
-  {% endif %}
+  {% endif %} -->
   
  
   <div class="grid gap-4 md:grid-cols-3">
